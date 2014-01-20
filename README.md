@@ -8,13 +8,13 @@ a lib to manage crazy options,很多库中，参数跟配置的管理很蛋疼�
 
 #Options.create
 
-  var schema = 
-  {
-      count: { type: Number, required: true },
-      id: { type: Array, required: true }
-  }
-  var opt = Options.create(schema);
-  
+    var schema = 
+    {
+        count: { type: Number, required: true },
+        id: { type: Array, required: true }
+    }
+    var opt = Options.create(schema);
+    
 
 #opt.get()
 
@@ -29,6 +29,14 @@ a lib to manage crazy options,很多库中，参数跟配置的管理很蛋疼�
 
 处理用户输入的选项，类似jquery.extend,yui mix之类
 
+#opt._val()
+
+以对象方式获取配置对象
+
+#opt.stringify
+
+把配置对象拼装成querystring
+
 #Options._error
 
 处理错误，错误类型有 类型错误啊，长度错误啊，是否必选啊之类
@@ -39,7 +47,9 @@ a lib to manage crazy options,很多库中，参数跟配置的管理很蛋疼�
 
 当option内部的配置改变了，触发set事件。获取配置时触发get事件。
 
-暂时先想到这么多了。
+
+
+暂时先想到这么多了。es的keys seals之类有用就用上
 
 
 
