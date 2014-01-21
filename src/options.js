@@ -62,6 +62,26 @@ define(function (require, exports, module) {
 		return isArray(obj) ? obj : [obj];
 	}
 
+	var _bind = function (fn, context) {
+		var args,
+		proxy,
+		tmp;
+
+		if (typeof context === "string") {
+			tmp = fn[context];
+			context = fn;
+			fn = tmp;
+		}
+
+		// Simulated bind
+		args = Array.prototype.slice.call(arguments, 2);
+		proxy = function () {
+			return fn.apply(context || this, args.concat(Array.prototype.slice.call(arguments)));
+		};
+
+		return proxy;
+	}
+
 	function extend(a, b) {
 		var n;
 		if (!a) {
@@ -83,11 +103,13 @@ define(function (require, exports, module) {
 	var Option = function (schema, error) {
 		this.schema = {};
 		this._val = {};
-		this.error = extend({
+		this.errorString = extend({
 				"required" : "missing configuration target",
 				"typeError" : "type error",
+				"undefine" : "not defined",
 			}, error);
 		this.create(schema);
+		_eventEmitter.on('set', _bind(this._handleSetter, this))
 	};
 
 	Option.prototype = {
@@ -95,34 +117,53 @@ define(function (require, exports, module) {
 		constructor : Option,
 
 		error : function (key, type) {
-			var msg = 'options error: option name "' + key + '"has an error:' + this.error[type];
-			throw msg;
-			if (win.console) {
-				console.log(msg);
+			var msg = 'options error: option name "' + key + '"has an error:' + this.errorString[type];
+			if (window.console) {
+				console.log('%c' + msg, 'color:blue');
 			}
+			throw msg;
 		},
 		get : function () {},
-		set : function () {},
+		set : function (key, value) {
+			if (Type.isString(key)) {
+
+				_eventEmitter.trigger('set', key, value);
+
+			} else if (Type.isObject(key)) {
+
+				for (var singleKey in key) {
+					_eventEmitter.trigger('set', singleKey, key[singleKey]);
+				}
+
+			}
+		},
+		_handleSetter : function (key, value) {
+
+			Type.isObject(this.schema[key]) || this.error(key, 'undefine');
+
+			Type.getType(value) !== this.schema[key]['type'] && this.error(key, 'typeError');
+
+			this._val[key] = value;
+		},
 
 		//[{type:Number,name:"hello"}]
 
 		create : function (schema) {
-			if (!Type.isArray(schema)) {
+			if (!Type.isObject(schema)) {
 				throw "schema类型错误"
 			} //检验schema格式
 			var source = schema;
 			var plainObj = {},
-			i = 0,
-			l = source.length;
+			key;
 
-			for (; i < l; i++) {
+			for (key in source) {
 
-				var singleInput = source[i];
+				var singleInput = source[key];
 
-				plainObj[singleInput['name']] = Type.isDefined(singleInput['default']) ? singleInput['default'] : Undefined;
+				plainObj[key] = Type.isDefined(singleInput['default']) ? singleInput['default'] : Undefined;
 
 			}
-			console.log(plainObj)
+
 			this._val = plainObj;
 			this.schema = schema
 		}

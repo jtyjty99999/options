@@ -106,7 +106,8 @@ define(function (require, exports, module) {
 		isObject : isObject,
 		isString : isString,
 		isEmpty : isEmpty,
-		isEqual : isEqual
+		isEqual : isEqual,
+		getType : _getType
 	}
 
 })

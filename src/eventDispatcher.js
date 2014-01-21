@@ -130,10 +130,13 @@ define(function (require, exports, module) {
 			l = eventList.length;
 
 			for (; i < l; i++) { //拼装参数
-
+			
 				var argsCache = _convertToArray(arg);
+					
 				argsCache.shift();
+				
 				argsCache.unshift(eventList[i]); //把新的事件重新传入trigger函数
+				
 				this.trigger.apply(this, argsCache); //传入新的参数数组,包含事件与参数
 
 			}
@@ -168,12 +171,15 @@ define(function (require, exports, module) {
 
 						var j = 1,
 						ln = arg.length;
-
+						
+					//	event.arg = []; //很重要，清理原来事件的参数
+						
 						for (; j < ln; j++) {
 
 							event.arg.push(arg[j])
 
 						}
+						
 					} else {
 
 						event.arg = param; //传入数组
@@ -188,7 +194,6 @@ define(function (require, exports, module) {
 				i = 0;
 
 				for (; i < n; i++) { //循环执行事件回调
-
 					listeners[i].apply(this, event.arg || null)
 				}
 
