@@ -55,6 +55,7 @@ define(function (require, exports, module) {
 		}
 	}
 
+	
 	var isEqual = function (a, b) {
 		if (a === b) {
 			return true;

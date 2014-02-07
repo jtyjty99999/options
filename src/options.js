@@ -62,7 +62,7 @@ define(function (require, exports, module) {
 		return isArray(obj) ? obj : [obj];
 	}
 
-	var _bind = function (fn, context) {
+	function _bind(fn, context) {
 		var args,
 		proxy,
 		tmp;
@@ -147,7 +147,7 @@ define(function (require, exports, module) {
 		},
 
 		//[{type:Number,name:"hello"}]
-
+			
 		create : function (schema) {
 			if (!Type.isObject(schema)) {
 				throw "schema类型错误"
@@ -160,12 +160,18 @@ define(function (require, exports, module) {
 
 				var singleInput = source[key];
 
-				plainObj[key] = Type.isDefined(singleInput['default']) ? singleInput['default'] : Undefined;
+				plainObj[key] = Type.isDefined(singleInput['defaultValue']) ? singleInput['defaultValue'] : Undefined;
 
 			}
 
 			this._val = plainObj;
 			this.schema = schema
+		},
+		assign : function (opt) {
+			for (n in opt) {
+				this.set(n, opt[n])
+			}
+			return this._val;
 		}
 
 	};

@@ -6,34 +6,40 @@ a lib to manage crazy options,很多库中，参数跟配置的管理很蛋疼�
 
 提供以下api
 
-#Options.create
+#初始化
 
-    var schema = 
-    {
-        count: { type: Number, required: true },
-        id: { type: Array, required: true }
-    }
-    var opt = Options.create(schema);
-    
+	var Opt = require('../../src/options.js');
 
-#opt.get()
+	var option = new Opt({
+			id : {
+				type : "Number",
+				defaultValue : 123
+			},
+			name:{
+				type : "String",
+				defaultValue : 'abc'
+			}
+		})
+	console.log(option._val)
+
+#option.get()
 
 通过key得到某配置项
 
 
-#opt.set()
+#option.set()
 
 类似jq,get一个set一堆，可以传入键值对也可以传入对象
 
-#opt.extend(input)
+#option.assign(input)
 
 处理用户输入的选项，类似jquery.extend,yui mix之类
 
-#opt._val()
+#option._val()
 
 以对象方式获取配置对象
 
-#opt.stringify
+#option.stringify
 
 把配置对象拼装成querystring
 

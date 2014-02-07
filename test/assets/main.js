@@ -5,17 +5,22 @@ define(function (require, exports, module) {
 	var option = new opt({
 			id : {
 				type : "Number",
-				name : "hello",
-			default:
-				123
+				defaultValue : 123
+			},
+			name:{
+				type : "String",
+				defaultValue : 'abc'
 			}
 		})
 
 		console.log(option._val)
-		
-		option.set('id',44);
-		//option.set('id','aa');
-		console.log(option._val)
-		option.set('ddd',44)
-		console.log(option._val)
+
+		option.set('id', 44);
+	//option.set('id','aa');
+	console.log(option._val)
+	//option.set('ddd', 44)
+	//console.log(option._val)
+	
+	option.assign({'id':2,'name':"dads"})
+	console.log(option._val)
 })
